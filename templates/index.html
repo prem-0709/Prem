@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Drowsiness Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Google Sign-In API -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Driver Drowsiness Detection System</h1>
+            <div class="user-auth">
+                <div id="g_id_onload"
+                     data-client_id="YOUR_GOOGLE_CLIENT_ID"
+                     data-callback="handleCredentialResponse">
+                </div>
+                <div class="g_id_signin" data-type="standard"></div>
+            </div>
+        </header>
+
+        <main>
+            <div class="dashboard">
+                <div class="video-container">
+                    <h2>Camera Feed</h2>
+                    <div class="webcam-container">
+                        <video id="webcam" autoplay playsinline style="display: none;"></video>
+                        <canvas id="canvas" style="display: block; width: 100%; height: auto;"></canvas>
+                        <img id="processed-image" alt="Processed Feed" style="display: none; width: 100%; height: auto;">
+                    </div>
+                    <div id="webcam-error" class="error-message" style="display: none; color: red; margin-top: 10px;">
+                        Unable to access webcam. Please ensure camera permissions are enabled in your browser.
+                    </div>
+                </div>
+                
+                <div class="status-container">
+                    <h2>Status</h2>
+                    <div id="status-indicator" class="status-normal">
+                        <span id="status-text">Monitoring...</span>
+                    </div>
+                    
+                    <div class="stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Session Duration:</span>
+                            <span id="session-duration">00:00:00</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Alerts:</span>
+                            <span id="alert-count">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">FPS:</span>
+                            <span id="fps-count">0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="controls">
+                        <button id="start-btn" class="btn">Start Monitoring</button>
+                        <button id="stop-btn" class="btn" disabled>Stop Monitoring</button>
+                        <button id="settings-btn" class="btn">Settings</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Login Modal -->
+        <div id="login-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Sign in to continue</h2>
+                <p>Please sign in with your Google account to use the Driver Drowsiness Detection System.</p>
+                <div class="g_id_signin" data-type="standard"></div>
+            </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Settings</h2>
+                <div class="settings-form">
+                    <div class="form-group">
+                        <label for="sensitivity">Detection Sensitivity:</label>
+                        <input type="range" id="sensitivity" min="1" max="10" value="5">
+                        <span id="sensitivity-value">5</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="alert-volume">Alert Volume:</label>
+                        <input type="range" id="alert-volume" min="0" max="10" value="7">
+                        <span id="volume-value">7</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="alert-type">Alert Type:</label>
+                        <select id="alert-type">
+                            <option value="beep">Beep</option>
+                            <option value="voice">Voice</option>
+                            <option value="both" selected>Both</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="camera-select">Camera:</label>
+                        <select id="camera-select">
+                            <option value="">Loading cameras...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="frame-rate">Frame Rate (FPS):</label>
+                        <input type="range" id="frame-rate" min="1" max="30" value="10">
+                        <span id="frame-rate-value">10</span>
+                    </div>
+                    <button id="save-settings" class="btn">Save Settings</button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 Driver Drowsiness Detection System</p>
+        </footer>
+    </div>
+
+    <!-- Audio for alerts -->
+    <audio id="alert-sound" src="{{ url_for('static', filename='audio/alert.mp3') }}" preload="auto"></audio>
+    
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
